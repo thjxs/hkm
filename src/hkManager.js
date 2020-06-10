@@ -1,4 +1,4 @@
-import { ModeOfOperation as aes } from 'aes-js';
+import { aesDecrypt, aesEncrypt } from './aes';
 import * as Base64 from './base64';
 
 const cSharpHeader = [
@@ -25,8 +25,6 @@ const cSharpHeader = [
   0,
   0,
 ];
-const aesKey = stb('UKu52ePUBwetZ9wNX88o54dnfKRu0T1l');
-const ecb = new aes.ecb(aesKey);
 
 function stb(string) {
   return new TextEncoder().encode(string);
@@ -34,20 +32,6 @@ function stb(string) {
 
 function bts(bytes) {
   return new TextDecoder().decode(bytes);
-}
-
-function aesDecrypt(bytes) {
-  let data = ecb.decrypt(bytes);
-  data = data.subarray(0, -data[data.length - 1]);
-  return data;
-}
-
-function aesEncrypt(bytes) {
-  let padValue = 16 - (bytes.length % 16);
-  let padded = new Uint8Array(bytes.length + padValue);
-  padded.fill(padValue);
-  padded.set(bytes);
-  return ecb.encrypt(padded);
 }
 
 function lengthPrefixed(len) {
