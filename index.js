@@ -68,9 +68,9 @@ class App extends Component {
   render() {
     const { editing, fileData, filename, errorMessage } = this.state;
     return (
-      <div className="container mx-auto flex">
-        <div className="w-1/3">
-          <h1>Hollow Knight save editor</h1>
+      <div className="container mx-auto p-2">
+        <div className="flex justify-between">
+          <h1 className="text-3xl italic">Hollow Knight save editor</h1>
           <button className="py-2" onClick={() => this.fileRef.current.click()}>
             select file
           </button>
@@ -86,7 +86,7 @@ class App extends Component {
           <div>
             <p className="my-2">{filename}</p>
             <textarea
-              cols="64"
+              cols="80"
               rows="24"
               value={fileData}
               onChange={this.onEdit}
