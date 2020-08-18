@@ -18,6 +18,11 @@ module.exports = {
     rules: [
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
       {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
         test: /\.css$/,
         loader: [
           MiniCssExtractPlugin.loader,
@@ -38,6 +43,9 @@ module.exports = {
       filename: '[name].[contenthash:8].css',
     }),
   ],
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js']
+  },
   mode: 'development',
   target: 'web',
 };
