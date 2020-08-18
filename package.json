@@ -19,7 +19,7 @@
     "esversion": 9
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,ts,tsx}": [
       "prettier --write --single-quote",
       "eslint"
     ]
