@@ -26,17 +26,17 @@ const cSharpHeader = [
   0,
 ];
 
-function stb(string) {
+function stb(string): Uint8Array {
   return new TextEncoder().encode(string);
 }
 
-function bts(bytes) {
+function bts(bytes): string {
   return new TextDecoder().decode(bytes);
 }
 
 function lengthPrefixed(len) {
   let length = Math.min(0x7fffffff, len);
-  let bytes = [];
+  const bytes = [];
   for (let i = 0; i < 4; i += 1) {
     if (length >> 7 !== 0) {
       bytes.push((length & 0x7f) | 0x80);
@@ -54,8 +54,8 @@ function lengthPrefixed(len) {
 }
 
 function addHeader(bytes) {
-  let lengthData = lengthPrefixed(bytes.length);
-  let newBytes = new Uint8Array(
+  const lengthData = lengthPrefixed(bytes.length);
+  const newBytes = new Uint8Array(
     bytes.length + cSharpHeader.length + lengthData.length + 1
   );
   newBytes.set(cSharpHeader);
@@ -81,7 +81,7 @@ function removeHeader(bytes) {
   return bytes;
 }
 
-export function decode(bytes) {
+export function decode(bytes: Uint8Array): string {
   bytes = bytes.slice();
   bytes = removeHeader(bytes);
   bytes = Base64.decode(bytes);
@@ -89,25 +89,30 @@ export function decode(bytes) {
   return bts(bytes);
 }
 
-export function encode(json) {
+export function encode(json: string): Uint8Array {
   let bytes = stb(json);
   bytes = aesEncrypt(bytes);
   bytes = Base64.encode(bytes);
   return addHeader(bytes);
 }
 
-export function hash(string) {
+export function hash(string: any): number {
   return string.split('').reduce((i, a) => (i << 5) - a + a.charCodeAt(0), 0);
 }
-
-export function download(content, filename, mime, bom) {
-  var blobData = typeof bom !== 'undefined' ? [bom, content] : [content];
-  var blob = new Blob(blobData, { type: mime || 'application/octet-stream' });
+type content = ArrayBuffer | ArrayBufferView | Blob | string;
+export function download(
+  content: content,
+  filename: string,
+  mime: string,
+  bom: string
+): void {
+  const blobData = typeof bom !== 'undefined' ? [bom, content] : [content];
+  const blob = new Blob(blobData, { type: mime || 'application/octet-stream' });
   if (typeof window.navigator.msSaveBlob !== 'undefined') {
     window.navigator.msSaveBlob(blob, filename);
   } else {
-    var blobURL = window.URL.createObjectURL(blob);
-    var aLink = document.createElement('a');
+    const blobURL = window.URL.createObjectURL(blob);
+    const aLink = document.createElement('a');
     aLink.style.display = 'none';
     aLink.href = blobURL;
     aLink.setAttribute('download', filename);
