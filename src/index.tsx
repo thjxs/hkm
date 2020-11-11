@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import * as hkm from './src/hkManager';
+import * as hkm from './hkManager';
 import './main.css';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      editing: false,
-      errorMessage: null,
-    };
-    this.fileRef = React.createRef();
-  }
+  fileRef: React.RefObject<HTMLInputElement> = React.createRef();
+  state = {
+    editing: false,
+    errorMessage: '',
+    originalFileData: '',
+    fileData: '',
+    filename: '',
+  };
   onFileChange = () => {
+    if (!this.fileRef.current) {
+      return;
+    }
     const { files } = this.fileRef.current;
+    if (!files) {
+      return;
+    }
     if (files.length === 0) {
       return;
     }
@@ -21,12 +27,16 @@ class App extends Component {
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.addEventListener('load', () => {
-      const result = reader.result;
+      const result: any = reader.result;
       try {
-        const decrypted = hkm.decode(new Uint8Array(result));
+        const decrypted: string = hkm.decode(new Uint8Array(result));
         console.log(decrypted);
 
-        const jsonString = JSON.stringify(JSON.parse(decrypted), undefined, 2);
+        const jsonString: string = JSON.stringify(
+          JSON.parse(decrypted),
+          undefined,
+          2
+        );
         this.setState({
           fileData: jsonString,
           originalFileData: jsonString,
@@ -39,7 +49,7 @@ class App extends Component {
       }
     });
   };
-  onEdit = (e) => {
+  onEdit = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({
       fileData: e.target.value,
     });
@@ -86,8 +96,8 @@ class App extends Component {
           <div>
             <p className="my-2">{filename}</p>
             <textarea
-              cols="80"
-              rows="24"
+              cols={80}
+              rows={24}
               value={fileData}
               onChange={this.onEdit}
               spellCheck={false}

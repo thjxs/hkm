@@ -26,15 +26,15 @@ const cSharpHeader = [
   0,
 ];
 
-function stb(string): Uint8Array {
+function stb(string: string): Uint8Array {
   return new TextEncoder().encode(string);
 }
 
-function bts(bytes): string {
+function bts(bytes: ArrayBuffer): string {
   return new TextDecoder().decode(bytes);
 }
 
-function lengthPrefixed(len) {
+function lengthPrefixed(len: number) {
   let length = Math.min(0x7fffffff, len);
   const bytes = [];
   for (let i = 0; i < 4; i += 1) {
@@ -53,7 +53,7 @@ function lengthPrefixed(len) {
   return bytes;
 }
 
-function addHeader(bytes) {
+function addHeader(bytes: Uint8Array) {
   const lengthData = lengthPrefixed(bytes.length);
   const newBytes = new Uint8Array(
     bytes.length + cSharpHeader.length + lengthData.length + 1
@@ -67,7 +67,7 @@ function addHeader(bytes) {
   return newBytes;
 }
 
-function removeHeader(bytes) {
+function removeHeader(bytes: Uint8Array) {
   bytes = bytes.subarray(cSharpHeader.length, bytes.length - 1);
 
   let count = 0;
@@ -96,15 +96,12 @@ export function encode(json: string): Uint8Array {
   return addHeader(bytes);
 }
 
-export function hash(string: any): number {
-  return string.split('').reduce((i, a) => (i << 5) - a + a.charCodeAt(0), 0);
-}
 type content = ArrayBuffer | ArrayBufferView | Blob | string;
 export function download(
   content: content,
   filename: string,
-  mime: string,
-  bom: string
+  mime?: string,
+  bom?: string
 ): void {
   const blobData = typeof bom !== 'undefined' ? [bom, content] : [content];
   const blob = new Blob(blobData, { type: mime || 'application/octet-stream' });
