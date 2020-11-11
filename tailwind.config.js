@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['./index.js'],
+  purge: ['./src/index.tsx'],
   theme: {
     screens: {
       sm: '640px',
