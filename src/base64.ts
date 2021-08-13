@@ -33,7 +33,7 @@ export function encode(buffer: Uint8Array): Uint8Array {
       output[k + 2] = base64EnTab(64);
     } else {
       output[k + 1] = base64EnTab(
-        ((buf[continuous] & 0x03) << 4) | (buf[continuous + 1] >> 4)
+        ((buf[continuous] & 0x03) << 4) | (buf[continuous + 1] >> 4),
       );
       output[k + 2] = base64EnTab((buf[continuous + 1] & 0x0f) << 2);
     }

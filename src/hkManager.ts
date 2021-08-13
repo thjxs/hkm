@@ -56,7 +56,7 @@ function lengthPrefixed(len: number) {
 function addHeader(bytes: Uint8Array) {
   const lengthData = lengthPrefixed(bytes.length);
   const newBytes = new Uint8Array(
-    bytes.length + cSharpHeader.length + lengthData.length + 1
+    bytes.length + cSharpHeader.length + lengthData.length + 1,
   );
   newBytes.set(cSharpHeader);
   newBytes.subarray(cSharpHeader.length).set(lengthData);
@@ -101,7 +101,7 @@ export function download(
   content: content,
   filename: string,
   mime?: string,
-  bom?: string
+  bom?: string,
 ): void {
   const blobData = typeof bom !== 'undefined' ? [bom, content] : [content];
   const blob = new Blob(blobData, { type: mime || 'application/octet-stream' });

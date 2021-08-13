@@ -35,7 +35,7 @@ class App extends Component {
         const jsonString: string = JSON.stringify(
           JSON.parse(decrypted),
           undefined,
-          2
+          2,
         );
         this.setState({
           fileData: jsonString,
