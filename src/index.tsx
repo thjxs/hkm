@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import * as hkm from './hkManager';
 import './main.css';
 
@@ -81,7 +81,7 @@ class App extends Component {
       <div className="container mx-auto p-2">
         <div className="flex justify-between">
           <h1 className="text-3xl italic">Hollow Knight save editor</h1>
-          <button className="py-2" onClick={() => this.fileRef.current.click()}>
+          <button className="py-2" onClick={() => this.fileRef.current?.click()}>
             select file
           </button>
           <input
@@ -117,4 +117,6 @@ class App extends Component {
   }
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+
+root.render(<App />);
